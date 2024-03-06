@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect
 from data.users import User
-from flask_login import LoginManager, login_user
+from flask_login import LoginManager, login_user, login_required, logout_user
 from forms.login import LoginForm
 from data import db_session
 from api import jobs_api
@@ -25,7 +25,7 @@ login_manager.init_app(app)
 @app.route('/index')
 def index():
     user = "Ученик Яндекс.Лицея"
-    return render_template('index.html', title='Домашняя страница',
+    return render_template('base.html', title='Домашняя страница',
                            username=user)
 
 
@@ -73,12 +73,12 @@ def reqister():
         return redirect('/login')
     return render_template('register.html', title='Регистрация', form=form)
 
-#
-# @app.route('/logout')
-# @login_required
-# def logout():
-#     logout_user()
-#     return redirect("/")
+
+@app.route('/logout')
+@login_required
+def logout():
+    logout_user()
+    return redirect("/")
 
 
 # @app.route('/news_delete/<int:id>', methods=['GET', 'POST'])
